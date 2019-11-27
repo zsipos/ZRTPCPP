@@ -136,7 +136,9 @@ static void threadLockCleanup(void) {
     for (i = 0; i < CRYPTO_num_locks(); i++) {
     /* rwlock_destroy(&(lock_cs[i])); */
     mutex_destroy(&(lock_cs[i]));
+/*
     fprintf(stderr,"%8ld:%s\n",lock_count[i],CRYPTO_get_lock_name(i));
+*/
     }
     OPENSSL_free(lock_cs);
     OPENSSL_free(lock_count);
@@ -201,8 +203,10 @@ static void threadLockCleanup(void)
     fprintf(stderr,"cleanup\n");
     for (i = 0; i < CRYPTO_num_locks(); i++) {
     pthread_mutex_destroy(&(lock_cs[i]));
+/*
     fprintf(stderr,"%8ld:%s\n",lock_count[i],
         CRYPTO_get_lock_name(i));
+*/
     }
     OPENSSL_free(lock_cs);
     OPENSSL_free(lock_count);
