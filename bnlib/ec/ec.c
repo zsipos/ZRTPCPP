@@ -986,6 +986,7 @@ static int _random(unsigned char *output, size_t len)
     return( 0 );
 }
 #else
+#include <stdbool.h>
 #include <cryptcommon/ZrtpRandom.h>
 static int _random(unsigned char *output, size_t len)
 {
