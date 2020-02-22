@@ -72,9 +72,9 @@ private:
 #ifdef __cplusplus
 extern "C"
 {
-#endif
 
 int zrtp_AddEntropy(const uint8_t *buffer, uint32_t length, bool isLocked);
+#endif
 
 int zrtp_getRandomData(uint8_t *buffer, uint32_t length);
 
