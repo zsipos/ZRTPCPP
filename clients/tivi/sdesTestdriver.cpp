@@ -1,4 +1,19 @@
 /*
+ * Copyright (c) 2019 Silent Circle.  All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *
  * Test program for tivi interface
  */
 #include <stdio.h>
@@ -149,11 +164,11 @@ static bool testBasicMix()
         fprintf(stderr, "testBasicMix: Testing invalid returned true, expecting false\n");
         return false;
     }
-    // set a valid algorithms that we can check on the next get
+    // set a valid algorithm that we can check on the next get
     sdes.setCryptoMixAttribute("BABAB HMAC-SHA-384 XYZABC");
 
     rc = sdes.getCryptoMixAttribute(buffer, sizeof(buffer));
-    int len = strlen("HMAC-SHA-384");
+    size_t len = strlen("HMAC-SHA-384");
     if (rc != len) {
         fprintf(stderr, "testBasicMix: get final mix algo returned wrong length, expected: %d, got: %d\n", len, rc);
         return false;
@@ -257,17 +272,17 @@ static bool testWithMix()
     char invMixBuffer[200];
     char answMixBuffer[200];
 
-    TestCallbackAudio *callback = new TestCallbackAudio();
-    TestSendCallbackAudio *sendCallback = new TestSendCallbackAudio();
+    auto *callback = new TestCallbackAudio();
+    auto *sendCallback = new TestSendCallbackAudio();
 
     // The Inviter session (offerer)
-    CtZrtpSession *inviter = new CtZrtpSession();
+    auto *inviter = new CtZrtpSession();
     inviter->init(true, true);                          // audio and video
     inviter->setUserCallback(callback, CtZrtpSession::AudioStream);
     inviter->setSendCallback(sendCallback, CtZrtpSession::AudioStream);
 
     // The answerer session
-    CtZrtpSession *answerer = new CtZrtpSession();
+    auto *answerer = new CtZrtpSession();
     answerer->init(true, true);                         // audio and video
     answerer->setSendCallback(sendCallback, CtZrtpSession::AudioStream);
 
