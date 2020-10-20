@@ -35,6 +35,8 @@
 #include <libzrtpcpp/Base32.h>
 #include <libzrtpcpp/EmojiBase32.h>
 
+#include <sys/types.h> // for musl libc
+
 using namespace GnuZrtpCodes;
 
 /*
