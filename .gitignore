@@ -24,3 +24,6 @@ helper/
 docLocal/
 .idea/
 cmake-build-*/
+.cproject
+.project
+.settings
