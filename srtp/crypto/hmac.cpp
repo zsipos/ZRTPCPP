@@ -29,6 +29,7 @@
 #include <pthread.h>
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <arpa/inet.h>
 
 static pthread_mutex_t swsha1_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -62,8 +63,26 @@ static volatile uint32_t *swsha1; // "secureworks sha1"
 #define ADDR_BLOCK			__addr(0x10)
 #define ADDR_DIGEST			__addr(0x20)
 
-extern "C" int zsipos_sha1_hw_init(void)
+static int get_addr_len(uint32_t &addr, uint32_t &len)
 {
+	FILE *f = fopen("/proc/device-tree/soc/sha@1/reg", "rb");
+
+	if (!f) {
+		perror("devicetree zsipos_sha1");
+		return 0;
+	}
+	fread(&addr, 1, sizeof(uint32_t), f);
+	fread(&len, 1, sizeof(uint32_t), f);
+	fclose(f);
+	addr = ntohl(addr);
+	len = ntohl(len);
+	return 1;
+}
+
+static int zsipos_sha1_hw_init(void)
+{
+	uint32_t addr, len;
+
 	if (fd > -1)
 		return 1;
 
@@ -72,13 +91,16 @@ extern "C" int zsipos_sha1_hw_init(void)
 	fd = open("/dev/zsipos_sha1", O_RDWR | O_SYNC);
 	if (fd < 0)
 	{
-		perror("open");
+		perror("open zsipos_sha1");
 		return 0;
 	}
 
-	swsha1 = (uint32_t*)mmap(NULL, 256, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0x4f000000);
+	if (!get_addr_len(addr, len))
+		return 0;
+
+	swsha1 = (uint32_t*)mmap(NULL, len, PROT_READ | PROT_WRITE, MAP_SHARED, fd, addr);
 	if (swsha1 == MAP_FAILED) {
-		perror("mmap");
+		perror("mmap zsipos_sha1");
 		return 0;
 	}
 
